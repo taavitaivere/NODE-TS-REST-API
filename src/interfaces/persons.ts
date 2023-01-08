@@ -32,4 +32,9 @@ export class Persons extends Model {
     })
     avatar!: string;
 
+    @Column({
+        type: DataType.STRING
+    })
+    token!: string;
+
 }
