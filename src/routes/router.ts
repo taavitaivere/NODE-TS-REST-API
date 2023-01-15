@@ -15,14 +15,7 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 dotenv.config();
 
-
-
-router.post("/", [verifyToken, log], createPerson);
-router.get("/", getAllPerson);
-router.get("/:id", getPersonById);
-router.put("/:id", [verifyToken, log], updatePerson);
-router.delete("/:id", [verifyToken, log], deletePerson);
-router.get("/log", async (req: any, res: any) => {
+router.get("/logs", async (req: any, res: any) => {
     const lines = [];
     const lineReader = require('readline').createInterface({
         input: require('fs').createReadStream('log.txt'),
@@ -42,6 +35,13 @@ router.get("/log", async (req: any, res: any) => {
     }
     res.send(lines);
 });
+
+router.post("/", [verifyToken, log], createPerson);
+router.get("/", getAllPerson);
+router.get("/:id", getPersonById);
+router.put("/:id", [verifyToken, log], updatePerson);
+router.delete("/:id", [verifyToken, log], deletePerson);
+
 
 
 function verifyToken(req : any, res : any, next : any) {

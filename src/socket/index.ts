@@ -1,5 +1,4 @@
 import {server} from "../app";
-
 const { getAllPersons, createPerson, deletePerson, updatePerson } = require('../controller/socketController');
 
 module.exports = (io: { on: (arg0: string, arg1: (arg0: any) => void) => void; }) => {

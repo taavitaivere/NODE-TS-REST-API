@@ -2,7 +2,7 @@ import express from 'express';
 import router from "./routes/router";
 import connection from "./db/config";
 import { urlencoded, json } from 'body-parser';
-import swaggerUi from 'swagger-ui-express';
+import swaggerUI from 'swagger-ui-express';
 import swaggerDocument from './swagger.json';
 import cors from 'cors';
 import { Server } from 'socket.io';
@@ -43,8 +43,7 @@ app.use('/token', (req, res) => {
 });
 
 
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 app.use((
     err: Error,
