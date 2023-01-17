@@ -4,7 +4,7 @@
   "description": "node+ts+sql",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch",
     "start": "tsc && nodemon dist/app.js",
     "predev": "npm run swagger",
