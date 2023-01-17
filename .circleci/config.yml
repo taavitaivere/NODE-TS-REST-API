@@ -1,10 +1,8 @@
 version: '2.1'
-orbs:
-  node: circleci/node@16.13
 jobs:
-  install-node-example:
+  build:
     docker:
-      - image: 'cimg/base:stable'
+      - image: circleci/node@16.13
     steps:
       - checkout
       - run: npm install
