@@ -1,14 +1,9 @@
 version: 2.1
 
-jobs:
-  hello-job:
-    macos:
-      xcode: 13.4.1
-    steps:
-      - checkout # check out the code in the project directory
-      - run: echo "hello world" # run the `echo` command
-
+orbs:
+  node: circleci/node@x.y
 workflows:
-  my-workflow:
+  test:
     jobs:
-      - hello-job
+      - node/test:
+          test-results-for: jest

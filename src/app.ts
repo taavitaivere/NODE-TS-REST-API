@@ -54,6 +54,11 @@ app.use((
     res.status(404).json({message:err.message});
 });
 
+function sum(a: number, b: number) {
+    return a + b;
+}
+module.exports = sum;
+
 connection.sync({force: true}).then(() => {
     console.log("Database synced");
 }).catch((err) => {
