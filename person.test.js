@@ -1,5 +1,5 @@
 const sum = require('./src/app.ts');
-import connection from "./src/db/config";
+const connection = require("./src/db/config");
 const { Person } = connection.models;
 
 test('adds 1 + 2 to equal 3', () => {
