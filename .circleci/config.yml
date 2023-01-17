@@ -7,8 +7,3 @@ jobs:
       - checkout
       - run: npm install
       - run: npm test
-workflows:
-  test_my_app:
-    jobs:
-      - node/test:
-          test-results-for: jest
