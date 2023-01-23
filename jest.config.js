@@ -1,5 +1,9 @@
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    setupFiles: ['dotenv/config'],
+    transform: {
+        '^.+\\.tsx?$': 'babel-jest',
+    },
+    transformIgnorePatterns: [
+        "node_models/(?!sequelize-typescript)",]
 };

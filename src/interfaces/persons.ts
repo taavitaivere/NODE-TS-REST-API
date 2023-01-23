@@ -1,4 +1,4 @@
-import {Table, Column, Model, DataType} from 'sequelize-typescript';
+const { Table, Column, Model, DataType } = require('sequelize-typescript');
 
 @Table({
     tableName: 'persons',
