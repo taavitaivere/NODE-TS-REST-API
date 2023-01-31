@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize-typescript";
-import { Persons } from "../interfaces/persons";
+import Persons  from "../interfaces/persons";
 
 const connection = new Sequelize({
     dialect: "mysql",
@@ -7,7 +7,7 @@ const connection = new Sequelize({
     username: "root",
     password: "",
     database: "reactdb",
-    models: [Persons],
+    models: [__dirname + '../interfaces/persons.ts'],
     logging: false
 });
 

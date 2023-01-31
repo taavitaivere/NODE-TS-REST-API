@@ -1,5 +1,6 @@
+import { Persons } from "../interfaces/persons";
+import connection from "../db/config";
 
-const {Persons} = require('../interfaces/persons');
 
 const getAllPersons = (io : any) => {
     Persons.findAll().then((persons: any) => io.emit('get/persons', persons));

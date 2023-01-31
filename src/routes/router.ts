@@ -1,6 +1,5 @@
 import {Router} from "express";
-
-
+import {check, validationResult} from "express-validator";
 import {
     createPerson,
     deletePerson,
@@ -13,9 +12,10 @@ const router = Router();
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const circularJSON = require('circular-json');
 dotenv.config();
 
-router.get("/logs", async (req: any, res: any) => {
+router.get("/log", async (req: any, res: any) => {
     const lines = [];
     const lineReader = require('readline').createInterface({
         input: require('fs').createReadStream('log.txt'),
@@ -34,6 +34,7 @@ router.get("/logs", async (req: any, res: any) => {
         });
     }
     res.send(lines);
+    return res.status(200);
 });
 
 router.post("/", [verifyToken, log], createPerson);
@@ -41,8 +42,6 @@ router.get("/", getAllPerson);
 router.get("/:id", getPersonById);
 router.put("/:id", [verifyToken, log], updatePerson);
 router.delete("/:id", [verifyToken, log], deletePerson);
-
-
 
 function verifyToken(req : any, res : any, next : any) {
     const authHeader = req.headers['authorization'];
@@ -72,10 +71,13 @@ async function log(req : any, res : any, next : any) {
     let dataDiff : any;
     let body : any;
 
-    if (req.method === 'PUT') { dataDiff = JSON.stringify(diff(req.body, (await getPersonById(req, res, next)))).replace(/[{\"\",}]+/g, " "); }
+    if (req.method === 'PUT') {
+        dataDiff = circularJSON.stringify(diff(req.body, (await getPersonById(req, res, next)))[0]).replace(/[{\"\",}]+/g, " ");
+    }
 
     if (req.method === "POST") {
-        body = JSON.stringify(req.body).replace(/[{\"\",}]+/g, " ");
+
+        body = circularJSON.stringify(req.body).replace(/[{\"\",}]+/g, " ");
     }
 
     fs.appendFile('log.txt', timeStamp + "," + req.originalUrl + "," + req.method + "," + signature + "," + dataDiff + "," + body + "\r\n", function (err : any) {
@@ -95,8 +97,8 @@ function diff(newData : any, oldData : any) {
 
     const intialObj : any = {};
     const result : any = {};
+    const reference = [] as any;
 
-    const reference = [];
     for (const key of getUniqueKey(newData, oldData)) {
         if (newData[key] !== oldData[key]) {
             intialObj[key] = oldData[key];

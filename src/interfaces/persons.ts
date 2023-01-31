@@ -1,11 +1,11 @@
-const { Table, Column, Model, DataType } = require('sequelize-typescript');
+import { Table, Column, Model, DataType } from 'sequelize-typescript';
 
 @Table({
     tableName: 'persons',
     timestamps: false,
 })
 
-export class Persons extends Model {
+export class Persons extends Model<Persons> {
     @Column({
         type: DataType.INTEGER,
         allowNull: false,
@@ -38,3 +38,4 @@ export class Persons extends Model {
     token!: string;
 
 }
+export default Persons;
