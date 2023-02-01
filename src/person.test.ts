@@ -17,7 +17,7 @@ jest.mock("./interfaces/persons", () => {
 let token: string;
 let id: number;
 
-describe("Authorization", () => {
+describe("Create person", () => {
   setTimeout(async () => {
     try {
       const res = await request(server).get("/token");
@@ -44,7 +44,9 @@ describe("Authorization", () => {
         expect(body.data).toEqual({
           name: "Test Person",
           email: "test@example.com",
-          avatar: "test_avatar.jpg"
+          avatar: "test_avatar.jpg",
+          id: 1,
+            token: token
         });
         expect(body).toEqual({
           data: {
