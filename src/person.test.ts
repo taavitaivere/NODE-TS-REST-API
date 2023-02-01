@@ -28,7 +28,7 @@ describe("Authorization", () => {
   });
 
   it("createPerson should be created successfully", async () => {
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    setTimeout(async () => {
 
     const response = await request(server)
         .post("/persons")
@@ -53,6 +53,7 @@ describe("Authorization", () => {
       },
       message: "Persons created successfully"
     });
+    }, 2000);
   });
 
   it("createPerson should return 401 if token is not provided", async () => {
