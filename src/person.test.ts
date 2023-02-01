@@ -28,31 +28,31 @@ describe("Authorization", () => {
   });
 
   it("createPerson should be created successfully", async () => {
-    setTimeout(() => {
-      const response = request(server)
-          .post("/persons")
-          .send({ name: "Test Person", email: "test@example.com", avatar: "test_avatar.jpg", token: token })
-          .set({ Authorization: `Bearer ${token}` });
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-      expect(response.statusCode).toEqual(200);
+    const response = await request(server)
+        .post("/persons")
+        .send({ name: "Test Person", email: "test@example.com", avatar: "test_avatar.jpg", token: token })
+        .set({ Authorization: `Bearer ${token}` });
 
-      const { body } = response;
-      id = body.id;
+    expect(response.statusCode).toEqual(200);
 
-      expect(body.data).toEqual({
+    const { body } = response;
+    id = body.id;
+
+    expect(body.data).toEqual({
+      name: "Test Person",
+      email: "test@example.com",
+      avatar: "test_avatar.jpg"
+    });
+    expect(body).toEqual({
+      data: {
         name: "Test Person",
         email: "test@example.com",
         avatar: "test_avatar.jpg"
-      });
-      expect(body).toEqual({
-        data: {
-          name: "Test Person",
-          email: "test@example.com",
-          avatar: "test_avatar.jpg"
-        },
-        message: "Persons created successfully"
-      });
-    }, 2000);
+      },
+      message: "Persons created successfully"
+    });
   });
 
   it("createPerson should return 401 if token is not provided", async () => {
@@ -116,14 +116,13 @@ describe("Authorization", () => {
     });
   });
   it("should not create a person due to missing fields", async () => {
-    setTimeout(async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
       const response = await request(server)
           .post("/persons")
           .send({ email: "test@example.com", avatar: "test_avatar.jpg", token: token })
           .set({ Authorization: `Bearer ${token}` });
 
       expect(response.statusCode).toEqual(400);
-    }, 2000);
   });
   it("should return a bad request error", async () => {
     const updatedData = {
@@ -158,14 +157,11 @@ describe("Authorization", () => {
     expect(body).toEqual({ message: 'include token' });
   });
   it("should prohibit from deleting a person", async () => {
-    setTimeout(async () => {
       const response = await request(server)
           .delete(`/persons/1222fdss2`)
           .set({Authorization: `Bearer ${token}`});
 
       expect(response.statusCode).toEqual(403);
-
-    }, 1000);
   });
   it("Should return 404 if person with specified ID does not exist", async () => {
     const res = await request(server)
