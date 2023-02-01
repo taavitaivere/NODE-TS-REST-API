@@ -28,7 +28,7 @@ describe("Authorization", () => {
   });
 
   it("createPerson should be created successfully", async () => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
     const response = await request(server)
         .post("/persons")
