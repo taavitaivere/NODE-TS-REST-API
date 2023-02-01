@@ -28,7 +28,7 @@ describe("Authorization", () => {
   });
 
   it("createPerson should be created successfully", async () => {
-    await new Promise(resolve => setTimeout(resolve, 3000));  // Adding a delay of 1000ms
+    await new Promise(resolve => setTimeout(resolve, 2000));  // Adding a delay of 1000ms
 
     const response = await request(server)
         .post("/persons")
@@ -115,13 +115,15 @@ describe("Authorization", () => {
       avatar: "test_avatar.jpg"
     });
   });
-  it("should not creata a person due missing fields", async () => {
-    const response = await request(server)
-        .post("/persons")
-        .send({email: "test@example.com", avatar: "test_avatar.jpg", token: token})
-        .set({Authorization: `Bearer ${token}`});
+  it("should not create a person due to missing fields", async () => {
+    setTimeout(async () => {
+      const response = await request(server)
+          .post("/persons")
+          .send({ email: "test@example.com", avatar: "test_avatar.jpg", token: token })
+          .set({ Authorization: `Bearer ${token}` });
 
-    expect(response.statusCode).toEqual(400);
+      expect(response.statusCode).toEqual(400);
+    }, 2000);
   });
   it("should return a bad request error", async () => {
     const updatedData = {
