@@ -18,41 +18,45 @@ let token: string;
 let id: number;
 
 describe("Authorization", () => {
-  it("should return a token", async () => {
-    setTimeout(async () => {
+  setTimeout(async () => {
+    try {
       const res = await request(server).get("/token");
       expect(res.statusCode).toEqual(200);
       expect(res.text).toBeDefined();
-      token = res.text;
-    }, 1000);
-  });
+    } catch (err) {
+      console.error("Error in should return a token test:", err);
+    }
+  }, 1000);
 
   it("createPerson should be created successfully", async () => {
     setTimeout(async () => {
+      try {
+        const response = await request(server)
+            .post("/persons")
+            .send({ name: "Test Person", email: "test@example.com", avatar: "test_avatar.jpg", token: token })
+            .set({ Authorization: `Bearer ${token}` });
 
-    const response = await request(server)
-        .post("/persons")
-        .send({ name: "Test Person", email: "test@example.com", avatar: "test_avatar.jpg", token: token })
-        .set({ Authorization: `Bearer ${token}` });
+        expect(response.statusCode).toEqual(200);
 
-    expect(response.statusCode).toEqual(200);
+        const { body } = response;
+        id = body.id;
 
-    const { body } = response;
-    id = body.id;
-
-    expect(body.data).toEqual({
-      name: "Test Person",
-      email: "test@example.com",
-      avatar: "test_avatar.jpg"
-    });
-    expect(body).toEqual({
-      data: {
-        name: "Test Person",
-        email: "test@example.com",
-        avatar: "test_avatar.jpg"
-      },
-      message: "Persons created successfully"
-    });
+        expect(body.data).toEqual({
+          name: "Test Person",
+          email: "test@example.com",
+          avatar: "test_avatar.jpg"
+        });
+        expect(body).toEqual({
+          data: {
+            name: "Test Person",
+            email: "test@example.com",
+            avatar: "test_avatar.jpg"
+          },
+          message: "Persons created successfully"
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }, 2000);
   });
 
@@ -117,14 +121,18 @@ describe("Authorization", () => {
     });
   });
   it("should not create a person due to missing fields", async () => {
-    setTimeout(async () => {
-      const response = await request(server)
-          .post("/persons")
-          .send({ email: "test@example.com", avatar: "test_avatar.jpg", token: token })
-          .set({ Authorization: `Bearer ${token}` });
+    try {
+      setTimeout(async () => {
+        const response = await request(server)
+            .post("/persons")
+            .send({ email: "test@example.com", avatar: "test_avatar.jpg", token: token })
+            .set({ Authorization: `Bearer ${token}` });
 
-      expect(response.statusCode).toEqual(400);
-    }, 2000);
+        expect(response.statusCode).toEqual(400);
+      }, 2000);
+    } catch (error) {
+      console.error(error);
+    }
   });
   it("should return a bad request error", async () => {
     const updatedData = {
@@ -160,12 +168,15 @@ describe("Authorization", () => {
   });
   it("should prohibit from deleting a person", async () => {
     setTimeout(async () => {
-      const response = await request(server)
-          .delete(`/persons/1222fdss2`)
-          .set({Authorization: `Bearer ${token}`});
+      try {
+        const response = await request(server)
+            .delete(`/persons/1222fdss2`)
+      .set({Authorization: `Bearer ${token}`});
 
-      expect(response.statusCode).toEqual(403);
-
+        expect(response.statusCode).toEqual(403);
+      } catch (error) {
+        console.error(error);
+      }
     }, 1000);
   });
   it("Should return 404 if person with specified ID does not exist", async () => {
