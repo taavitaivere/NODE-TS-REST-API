@@ -18,11 +18,14 @@ let token: string;
 let id: number;
 
 describe("Authorization", () => {
-  it("should return a token", async () => {
-    const res = await request(server).get("/token");
-    expect(res.statusCode).toEqual(200);
-    expect(res.text).toBeDefined();
-    token = res.text;
+  it("should return a token", async (done) => {
+    setTimeout(async () => {
+      const res = await request(server).get("/token");
+      expect(res.statusCode).toEqual(200);
+      expect(res.text).toBeDefined();
+      token = res.text;
+      done();
+    }, 3000);
   });
 
   it("createPerson should be created successfully", async () => {
