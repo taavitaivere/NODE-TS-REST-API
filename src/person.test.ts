@@ -28,31 +28,31 @@ describe("Authorization", () => {
   });
 
   it("createPerson should be created successfully", async () => {
-    await new Promise(resolve => setTimeout(resolve, 2000));  // Adding a delay of 1000ms
+    setTimeout(() => {
+      const response = request(server)
+          .post("/persons")
+          .send({ name: "Test Person", email: "test@example.com", avatar: "test_avatar.jpg", token: token })
+          .set({ Authorization: `Bearer ${token}` });
 
-    const response = await request(server)
-        .post("/persons")
-        .send({ name: "Test Person", email: "test@example.com", avatar: "test_avatar.jpg", token: token })
-        .set({ Authorization: `Bearer ${token}` });
+      expect(response.statusCode).toEqual(200);
 
-    expect(response.statusCode).toEqual(200);
+      const { body } = response;
+      id = body.id;
 
-    const { body } = response;
-    id = body.id;
-
-    expect(body.data).toEqual({
-      name: "Test Person",
-      email: "test@example.com",
-      avatar: "test_avatar.jpg"
-    });
-    expect(body).toEqual({
-      data: {
+      expect(body.data).toEqual({
         name: "Test Person",
         email: "test@example.com",
         avatar: "test_avatar.jpg"
-      },
-      message: "Persons created successfully"
-    });
+      });
+      expect(body).toEqual({
+        data: {
+          name: "Test Person",
+          email: "test@example.com",
+          avatar: "test_avatar.jpg"
+        },
+        message: "Persons created successfully"
+      });
+    }, 2000);
   });
 
   it("createPerson should return 401 if token is not provided", async () => {
@@ -157,12 +157,15 @@ describe("Authorization", () => {
     expect(response.statusCode).toEqual(401);
     expect(body).toEqual({ message: 'include token' });
   });
-  it ("should prohibit from deleting a person", async () => {
-    const response = await request(server)
-        .delete(`/persons/1222fdss2`)
-        .set({Authorization: `Bearer ${token}`});
+  it("should prohibit from deleting a person", async () => {
+    setTimeout(async () => {
+      const response = await request(server)
+          .delete(`/persons/1222fdss2`)
+          .set({Authorization: `Bearer ${token}`});
 
-    expect(response.statusCode).toEqual(403);
+      expect(response.statusCode).toEqual(403);
+
+    }, 1000);
   });
   it("Should return 404 if person with specified ID does not exist", async () => {
     const res = await request(server)
