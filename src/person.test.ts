@@ -18,17 +18,18 @@ let token: string;
 let id: number;
 
 describe("Authorization", () => {
-  it("should return a token", async (done) => {
+  it("should return a token", async () => {
     setTimeout(async () => {
       const res = await request(server).get("/token");
       expect(res.statusCode).toEqual(200);
       expect(res.text).toBeDefined();
       token = res.text;
-      done();
-    }, 3000);
+    }, 1000);
   });
 
   it("createPerson should be created successfully", async () => {
+    await new Promise(resolve => setTimeout(resolve, 3000));  // Adding a delay of 1000ms
+
     const response = await request(server)
         .post("/persons")
         .send({ name: "Test Person", email: "test@example.com", avatar: "test_avatar.jpg", token: token })
