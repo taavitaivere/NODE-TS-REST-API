@@ -7,7 +7,7 @@ const connection = new Sequelize({
     username: "root",
     password: "",
     database: "reactdb",
-    models: [__dirname + '../interfaces/persons.ts'],
+    models: [Persons],
     logging: false
 });
 

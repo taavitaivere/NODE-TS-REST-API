@@ -23,6 +23,7 @@ describe("Create person", () => {
       const res = await request(server).get("/token");
       expect(res.statusCode).toEqual(200);
       expect(res.text).toBeDefined();
+      token = res.text;
     } catch (err) {
       console.error("Error in should return a token test:", err);
     }
