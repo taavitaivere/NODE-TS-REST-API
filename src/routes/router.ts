@@ -37,11 +37,11 @@ router.get("/log", async (req: any, res: any) => {
     return res.status(200);
 });
 
-router.post("/", createPerson);
+router.post("/", [verifyToken, log], createPerson);
 router.get("/", getAllPerson);
 router.get("/:id", getPersonById);
-router.put("/:id", updatePerson);
-router.delete("/:id", deletePerson);
+router.put("/:id", [verifyToken, log], updatePerson);
+router.delete("/:id", [verifyToken, log], deletePerson);
 
 function verifyToken(req : any, res : any, next : any) {
     const authHeader = req.headers['authorization'];

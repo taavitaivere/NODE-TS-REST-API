@@ -48,6 +48,8 @@ export const getPersonById: RequestHandler = async (req, res, next) => {
 
 export const updatePerson: RequestHandler = async (req, res, next) => {
     try {
+
+        await authenticate(req, res, next);
         const {id} = req.params;
         const person: Persons | null = await Persons.findByPk(id);
 
@@ -77,7 +79,6 @@ export const updatePerson: RequestHandler = async (req, res, next) => {
         return res.status(500).json({message: "Server error"});
     }
 };
-
 
 export const deletePerson: RequestHandler = async (req, res, next) => {
     try {
