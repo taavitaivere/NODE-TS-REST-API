@@ -38,10 +38,10 @@ export const getPersonById: RequestHandler = async (req, res, next) => {
                 avatar: person.avatar
             });
         } else {
-            return res.status(404).json({ message: "Person not found" });
+            return res.status(404).json({message: "Person not found"});
         }
     } catch (err) {
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({message: "Internal server error"});
     }
 }
 
@@ -75,7 +75,7 @@ export const updatePerson: RequestHandler = async (req, res, next) => {
         if (err.message === "auth error") {
             return res.status(403).send();
         }
-        return res.status(500).json({message: "Server error"});
+        return res.status(500).json({message: err.message});
     }
 };
 
