@@ -17,7 +17,6 @@ export const createPerson: RequestHandler = async (req, res, next) => {
     }
 };
 
-
 export const getAllPerson: RequestHandler = async (req, res, next) => {
     const allPersons: Persons[] = await Persons.findAll();
 
@@ -39,17 +38,17 @@ export const getPersonById: RequestHandler = async (req, res, next) => {
                 avatar: person.avatar
             });
         } else {
-            return res.status(404).json({message: "Person not found"});
+            return res.status(404).json({ message: "Person not found" });
         }
     } catch (err) {
-        return res.status(500).json({message: "Internal server error"});
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
 export const updatePerson: RequestHandler = async (req, res, next) => {
     try {
 
-        await authenticate(req, res, next);
+        //await authenticate(req, res, next);
         const {id} = req.params;
         const person: Persons | null = await Persons.findByPk(id);
 
@@ -82,15 +81,12 @@ export const updatePerson: RequestHandler = async (req, res, next) => {
 
 export const deletePerson: RequestHandler = async (req, res, next) => {
     try {
-        await authenticate(req, res, next);
         const { id } = req.params;
         const deletedPerson: Persons | null = await Persons.findByPk(id);
 
         if (!deletedPerson) {
             return res.status(404).json({ message: "Person not found" });
         }
-
-        await Persons.destroy({ where: { id } });
 
         return res.status(200).json({ message: "Person deleted successfully", data: deletedPerson });
     } catch (err) {

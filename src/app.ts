@@ -13,7 +13,7 @@ const app = express();
 const jwt = require('jsonwebtoken');
 
 const limiter = rateLimit({
-    max: 10,
+    max: 3,
     windowMs: 10000
 });
 

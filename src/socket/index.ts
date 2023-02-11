@@ -13,4 +13,4 @@ module.exports = (io: { on: (arg0: string, arg1: (arg0: any) => void) => void; }
             console.log(`connect_error due to ${err.message}`);
         });
     });
-}
+};

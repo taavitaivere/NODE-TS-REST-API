@@ -1,6 +1,4 @@
 import { Persons } from "../interfaces/persons";
-import connection from "../db/config";
-
 
 const getAllPersons = (io : any) => {
     Persons.findAll().then((persons: any) => io.emit('get/persons', persons));
@@ -15,6 +13,9 @@ const deletePerson = (io: { emit: (arg0: string, arg1: any) => any; }, id: any) 
 }
 
 const updatePerson = (io: { emit: (arg0: string, arg1: any) => any; }, data: { id: any; }) => {
+    if (!data.id) {
+        throw new Error("Id is required to update the record");
+    }
     Persons.update(data, {where: {id: data.id}}).then(() => getAllPersons(io));
 }
 
