@@ -7,6 +7,7 @@ import {
     getPersonById,
     updatePerson
 } from "../controller/personController";
+import Persons from "../interfaces/persons";
 
 const router = Router();
 const jwt = require('jsonwebtoken');
@@ -37,11 +38,11 @@ router.get("/log", async (req: any, res: any) => {
     return res.status(200);
 });
 
-router.post("/", [ log], createPerson);
+router.post("/", [verifyToken, log], createPerson);
 router.get("/", getAllPerson);
 router.get("/:id", getPersonById);
-router.put("/:id", updatePerson);
-router.delete("/:id", [ log], deletePerson);
+router.put("/:id", [verifyToken, log], updatePerson);
+router.delete("/:id", [verifyToken, log], deletePerson);
 
 function verifyToken(req : any, res : any, next : any) {
     const authHeader = req.headers['authorization'];
@@ -64,7 +65,6 @@ function verifyToken(req : any, res : any, next : any) {
 
 async function log(req : any, res : any, next : any) {
     const timeStamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
     let token = req.headers.authorization;
     const [header, payload, signature] = token.split('.');
 
@@ -95,8 +95,8 @@ function diff(newData : any, oldData : any) {
         });
     }
 
-    const intialObj : any = {};
-    const result : any = {};
+    const intialObj: any = {};
+    const result: any = {};
     const reference = [] as any;
 
     for (const key of getUniqueKey(newData, oldData)) {

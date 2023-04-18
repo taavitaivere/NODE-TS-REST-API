@@ -5,9 +5,9 @@ const connection = new Sequelize({
     dialect: "mysql",
     host: "localhost",
     username: "root",
-    password: "root",
+    password: "",
     database: "reactdb",
-    models: [Persons],
+    models: [__dirname + '../interfaces/persons.ts'],
     logging: false
 });
 
