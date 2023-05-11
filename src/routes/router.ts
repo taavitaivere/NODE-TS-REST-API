@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {check, validationResult} from "express-validator";
+
 import {
     createPerson,
     deletePerson,
@@ -7,7 +7,6 @@ import {
     getPersonById,
     updatePerson
 } from "../controller/personController";
-import Persons from "../interfaces/persons";
 
 const router = Router();
 const jwt = require('jsonwebtoken');
@@ -46,6 +45,7 @@ router.delete("/:id", [verifyToken, log], deletePerson);
 
 function verifyToken(req : any, res : any, next : any) {
     const authHeader = req.headers['authorization'];
+
     if (typeof authHeader !== 'undefined') {
         const token = authHeader.split(' ')[1];
         const privateKey = process.env.KEY;
@@ -65,19 +65,17 @@ function verifyToken(req : any, res : any, next : any) {
 
 async function log(req : any, res : any, next : any) {
     const timeStamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+
     let token = req.headers.authorization;
     const [header, payload, signature] = token.split('.');
 
     let dataDiff : any;
     let body : any;
 
-    if (req.method === 'PUT') {
-        dataDiff = circularJSON.stringify(diff(req.body, (await getPersonById(req, res, next)))[0]).replace(/[{\"\",}]+/g, " ");
-    }
+    if (req.method === 'PUT') { dataDiff = JSON.stringify(diff(req.body, (await getPersonById(req, res, next)))).replace(/[{\"\",}]+/g, " "); }
 
     if (req.method === "POST") {
-
-        body = circularJSON.stringify(req.body).replace(/[{\"\",}]+/g, " ");
+        body = JSON.stringify(req.body).replace(/[{\"\",}]+/g, " ");
     }
 
     fs.appendFile('log.txt', timeStamp + "," + req.originalUrl + "," + req.method + "," + signature + "," + dataDiff + "," + body + "\r\n", function (err : any) {
@@ -87,18 +85,19 @@ async function log(req : any, res : any, next : any) {
     next();
 }
 
-function diff(newData : any, oldData : any) {
-    function getUniqueKey(newData : any, oldData : any) {
+const CircularJSON = require('circular-json');
+function diff(newData, oldData) {
+    function getUniqueKey(newData, oldData) {
         const keys = Object.keys(newData).concat(Object.keys(oldData));
-        return keys.filter(function (item, pos) {
+        return keys.filter(function(item, pos) {
             return keys.indexOf(item) === pos;
         });
     }
 
-    const intialObj: any = {};
-    const result: any = {};
-    const reference = [] as any;
+    const intialObj = {};
+    const result = {};
 
+    const reference = [];
     for (const key of getUniqueKey(newData, oldData)) {
         if (newData[key] !== oldData[key]) {
             intialObj[key] = oldData[key];
@@ -106,7 +105,7 @@ function diff(newData : any, oldData : any) {
         }
     }
     reference.push(intialObj, result);
-    return reference;
+    return CircularJSON.stringify(reference, (key, value) => (typeof value === 'bigint' ? value.toString() : value));
 }
 
 export default router;

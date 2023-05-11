@@ -30,6 +30,12 @@ require('./socket')(io);
 app.use(json());
 app.use(cors());
 
+app.use ((err, req, res, next) => {
+    if (err.code === 'ERR_HTTP_HEADERS_SENT') {
+        return next(err);
+    }
+});
+
 
 app.use(urlencoded({extended: true}));
 

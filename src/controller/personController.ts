@@ -4,7 +4,7 @@ import {Persons} from "../interfaces/persons";
 const jwt = require('jsonwebtoken');
 export const createPerson: RequestHandler = async (req, res, next) => {
     try {
-        if (!req.body.name || !req.body.email || !req.body.avatar) {
+        if (!req.body.name || !req.body.email || !req.body.avatar || !req.body.token) {
             return res.status(400).json({message: "Name, email and avatar are required fields"});
         }
 
@@ -32,11 +32,7 @@ export const getPersonById: RequestHandler = async (req, res, next) => {
         const person: Persons | null = await Persons.findByPk(id);
 
         if (person) {
-            return res.status(200).json({
-                name: person.name,
-                email: person.email,
-                avatar: person.avatar
-            });
+            return res.status(200);
         } else {
             return res.status(404).json({message: "Person not found"});
         }
@@ -47,9 +43,8 @@ export const getPersonById: RequestHandler = async (req, res, next) => {
 
 export const updatePerson: RequestHandler = async (req, res, next) => {
     try {
-
         await authenticate(req, res, next);
-        const {id} = req.params;
+        const { id } = req.params;
         const person: Persons | null = await Persons.findByPk(id);
 
         if (!req.body.name || !req.body.email || !req.body.avatar) {
@@ -61,7 +56,7 @@ export const updatePerson: RequestHandler = async (req, res, next) => {
         }
 
         await Persons.update({...req.body}, {where: {id}});
-        const updatedPerson: Persons | null = await Persons.findByPk(id);
+        const updatedPerson: Persons | null = req.body;
 
 
         return res.status(200).json({
