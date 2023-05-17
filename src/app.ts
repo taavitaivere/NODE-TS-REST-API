@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import router from "./routes/router";
 import connection from "./db/config";
 import { urlencoded, json } from 'body-parser';
@@ -35,6 +35,7 @@ app.use ((err, req, res, next) => {
         return next(err);
     }
 });
+
 
 
 app.use(urlencoded({extended: true}));

@@ -63,49 +63,49 @@ function verifyToken(req : any, res : any, next : any) {
     }
 }
 
-async function log(req : any, res : any, next : any) {
+async function log(req: any, res: any, next: any) {
     const timeStamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
     let token = req.headers.authorization;
     const [header, payload, signature] = token.split('.');
 
-    let dataDiff : any;
-    let body : any;
+    let dataDiff: any;
+    let body: any;
 
-    if (req.method === 'PUT') { dataDiff = JSON.stringify(diff(req.body, (await getPersonById(req, res, next)))).replace(/[{\"\",}]+/g, " "); }
-
-    if (req.method === "POST") {
-        body = JSON.stringify(req.body).replace(/[{\"\",}]+/g, " ");
+    if (req.method === 'PUT') {
+        const existingPerson = await getPersonById(req, res, next);
+        const diffResult = diff(req.body, existingPerson);
+        if (Object.keys(diffResult).length > 0) {
+            dataDiff = diffResult;
+        }
     }
 
-    fs.appendFile('log.txt', timeStamp + "," + req.originalUrl + "," + req.method + "," + signature + "," + dataDiff + "," + body + "\r\n", function (err : any) {
-        if (err) throw err;
-        console.log('Saved!');
-    });
+    if (req.method === 'POST') {
+        body = circularJSON.stringify(req.body).replace(/[{\"\",}]+/g, ' ');
+    }
+
+    fs.appendFile(
+        'log.txt',
+        `${timeStamp},${req.originalUrl},${req.method},${signature},${JSON.stringify(dataDiff)},${body}\r\n`,
+        function (err: any) {
+            if (err) throw err;
+            console.log('Saved!');
+        }
+    );
     next();
 }
 
-const CircularJSON = require('circular-json');
-function diff(newData, oldData) {
-    function getUniqueKey(newData, oldData) {
-        const keys = Object.keys(newData).concat(Object.keys(oldData));
-        return keys.filter(function(item, pos) {
-            return keys.indexOf(item) === pos;
-        });
-    }
+function diff(newData: any, oldData: any) {
+    const result: any = {};
 
-    const intialObj = {};
-    const result = {};
-
-    const reference = [];
-    for (const key of getUniqueKey(newData, oldData)) {
-        if (newData[key] !== oldData[key]) {
-            intialObj[key] = oldData[key];
-            result[key] = newData[key];
+    for (const key in newData) {
+        if (newData.hasOwnProperty(key) && newData[key] !== oldData[key]) {
+            result[key] = {
+                old: oldData[key],
+                new: newData[key]
+            };
         }
     }
-    reference.push(intialObj, result);
-    return CircularJSON.stringify(reference, (key, value) => (typeof value === 'bigint' ? value.toString() : value));
+    return result;
 }
 
 export default router;
