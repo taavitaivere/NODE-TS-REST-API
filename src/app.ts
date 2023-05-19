@@ -4,7 +4,6 @@ import connection from "./db/config";
 const app = express();
 
 app.use((
-
     err: Error,
     req:express.Request,
     res:express.Response,
