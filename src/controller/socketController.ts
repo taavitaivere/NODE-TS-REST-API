@@ -12,9 +12,13 @@ const updatePerson = (io: { emit: (arg0: string, arg1: any) => any; }, data: { i
     Persons.update(data, {where: {id: data.id}}).then(() => getAllPersons(io));
 }
 
+const deletePerson = (io: { emit: (arg0: string, arg1: any) => any; }, id: any) => {
+    Persons.destroy({where: {id}}).then(() => getAllPersons(io));
+}
 
 module.exports = {
     getAllPersons,
     createPerson,
-    updatePerson
+    updatePerson,
+    deletePerson
 }
