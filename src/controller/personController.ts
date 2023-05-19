@@ -1,7 +1,6 @@
 import {RequestHandler} from "express";
 import {Persons} from "../interfaces/persons";
 
-
 export const createPerson: RequestHandler = async (req, res, next) => {
     const persons = await Persons.create({...req.body});
     return res
@@ -12,7 +11,6 @@ export const getAllPerson: RequestHandler = async (req, res, next) => {
     const allPersons: Persons[] = await Persons.findAll();
 
     return res.status(200).json({message: "All persons fetched successfully", data: allPersons});
-
 }
 
 export const getPersonById: RequestHandler = async (req, res, next) => {
@@ -34,4 +32,13 @@ export const updatePerson: RequestHandler = async (req, res, next) => {
     }
 
     return res.status(404).json({message: "Person not found"});
+}
+
+export const deletePerson: RequestHandler = async (req, res, next) => {
+    const {id} = req.params;
+    const deletedPerson: Persons | null = await Persons.findByPk(id);
+
+    await Persons.destroy({where: {id}});
+
+    return res.status(200).json({message: "Person deleted successfully", data: deletedPerson});
 }
