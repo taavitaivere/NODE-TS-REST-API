@@ -7,3 +7,10 @@ export const createPerson: RequestHandler = async (req, res, next) => {
         .status(200)
         .json({message: "Persons fetched successfully", data: persons});
 };
+
+export const getAllPerson: RequestHandler = async (req, res, next) => {
+    const allPersons: Persons[] = await Persons.findAll();
+
+    return res.status(200).json({message: "All persons fetched successfully", data: allPersons});
+
+}
