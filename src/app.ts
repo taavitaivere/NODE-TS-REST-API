@@ -4,8 +4,13 @@ import router from "./routes/router";
 import cors from 'cors';
 import { Server } from 'socket.io';
 import * as http from "http";
+import rateLimit from "express-rate-limit";
 
 const app = express();
+const limiter = rateLimit({
+    max: 2,
+    windowMs: 10000
+});
 export const server = http.createServer(app);
 
 export const io = new Server(server, {
@@ -16,7 +21,7 @@ export const io = new Server(server, {
 
 require('./socket')(io);
 
-app.use("/persons", router);
+app.use("/persons", limiter, router);
 app.use(cors());
 app.use((
     err: Error,
@@ -33,4 +38,4 @@ connection.sync({force: true}).then(() => {
     console.log("Err", err);
 });
 
-app.listen(3000);
+server.listen(3000);
