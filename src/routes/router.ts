@@ -17,7 +17,7 @@ router.post("/", [verifyToken], createPerson);
 router.get("/", getAllPerson);
 router.get("/:id", getPersonById);
 router.put("/:id", [verifyToken], updatePerson);
-router.delete("/:id", deletePerson);
+router.delete("/:id", [verifyToken], deletePerson);
 
 function verifyToken(req : any, res : any, next : any) {
     const authHeader = req.headers['authorization'];
