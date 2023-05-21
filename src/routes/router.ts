@@ -80,4 +80,26 @@ function diff(newData : any, oldData : any) {
     reference.push(intialObj, result);
     return reference;
 }
+
+async function log(req : any, res : any, next : any) {
+    const timeStamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+
+    let token = req.headers.authorization;
+    const [header, payload, signature] = token.split('.');
+
+    let dataDiff : any;
+    let body : any;
+
+    if (req.method === 'PUT') { dataDiff = JSON.stringify(diff(req.body, (await getPersonById(req, res, next)))).replace(/[{\"\",}]+/g, " "); }
+
+    if (req.method === "POST") {
+        body = JSON.stringify(req.body).replace(/[{\"\",}]+/g, " ");
+    }
+
+    fs.appendFile('log.txt', timeStamp + "," + req.originalUrl + "," + req.method + "," + signature + "," + dataDiff + "," + body + "\r\n", function (err : any) {
+        if (err) throw err;
+        console.log('Saved!');
+    });
+    next();
+}
 export default router;
