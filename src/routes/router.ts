@@ -16,7 +16,7 @@ dotenv.config();
 router.post("/", [verifyToken], createPerson);
 router.get("/", getAllPerson);
 router.get("/:id", getPersonById);
-router.put("/:id", updatePerson);
+router.put("/:id", [verifyToken], updatePerson);
 router.delete("/:id", deletePerson);
 
 function verifyToken(req : any, res : any, next : any) {

@@ -22,17 +22,25 @@ export const getPersonById: RequestHandler = async (req, res, next) => {
 }
 
 export const updatePerson: RequestHandler = async (req, res, next) => {
-    const {id} = req.params;
-    const person: Persons | null = await Persons.findByPk(id);
+    try {
+        await authenticate(req, res, next);
+        const {id} = req.params;
+        const person: Persons | null = await Persons.findByPk(id);
 
-    if (person) {
-        await Persons.update({...req.body}, {where: {id}});
-        const updatedPerson: Persons | null = await Persons.findByPk(id);
+        if (person) {
+            await Persons.update({...req.body}, {where: {id}});
+            const updatedPerson: Persons | null = await Persons.findByPk(id);
 
-        return res.status(200).json({message: "Person updated successfully", data: updatedPerson});
+            return res.status(200).json({message: "Person updated successfully", data: updatedPerson});
+        }
+
     }
-
-    return res.status(404).json({message: "Person not found"});
+    catch (err: any) {
+        if (err.message === "auth error") {
+            return res.status(403).send();
+        }
+        return res.status(404).json({message: "Person not found"});
+    }
 }
 
 export const deletePerson: RequestHandler = async (req, res, next) => {
