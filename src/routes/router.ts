@@ -11,6 +11,8 @@ import {
 const router = Router();
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const fs = require('fs');
+
 dotenv.config();
 
 router.post("/", [verifyToken], createPerson);
