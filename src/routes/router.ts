@@ -58,4 +58,26 @@ function verifyToken(req : any, res : any, next : any) {
         throw new Error("include token");
     }
 }
+
+function diff(newData : any, oldData : any) {
+    function getUniqueKey(newData : any, oldData : any) {
+        const keys = Object.keys(newData).concat(Object.keys(oldData));
+        return keys.filter(function (item, pos) {
+            return keys.indexOf(item) === pos;
+        });
+    }
+
+    const intialObj : any = {};
+    const result : any = {};
+
+    const reference = [];
+    for (const key of getUniqueKey(newData, oldData)) {
+        if (newData[key] !== oldData[key]) {
+            intialObj[key] = oldData[key];
+            result[key] = newData[key];
+        }
+    }
+    reference.push(intialObj, result);
+    return reference;
+}
 export default router;
