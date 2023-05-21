@@ -31,4 +31,9 @@ export class Persons extends Model {
         allowNull: false
     })
     avatar!: string;
+
+    @Column({
+        type: DataType.STRING
+    })
+    token!: string;
 }

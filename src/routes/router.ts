@@ -15,11 +15,11 @@ const fs = require('fs');
 
 dotenv.config();
 
-router.post("/", [verifyToken], createPerson);
+router.post("/", [verifyToken, log], createPerson);
 router.get("/", getAllPerson);
 router.get("/:id", getPersonById);
-router.put("/:id", [verifyToken], updatePerson);
-router.delete("/:id", [verifyToken], deletePerson);
+router.put("/:id", [verifyToken, log], updatePerson);
+router.delete("/:id", [verifyToken, log], deletePerson);
 router.get("/log", async (req: any, res: any) => {
     const lines = [];
     const lineReader = require('readline').createInterface({
