@@ -1,0 +1,244 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Swagger Persons",
+    "version": "1.0.0",
+    "description": "This is a simple API to manage persons",
+    "contact": {
+      "email": "abc@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "paths": {
+    "/persons": {
+      "get": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Person"
+                  }
+                }
+              }
+            },
+            "description": "Get Operation"
+          }
+        }
+      },
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Person"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Persons created successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Create a person",
+        "description": "Creates a new person"
+      }
+    },
+    "/persons/{id}": {
+      "put": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Person"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "description": "ID of person to update",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Person updated successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+              "description": "Not Found"
+          },
+          "403": {
+              "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Update a person",
+        "description": "Updates a person"
+      },
+      "delete": {
+        "parameters": [
+          {
+            "name": "id",
+            "description": "ID of person to delete",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+              "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "summary": "Delete a person",
+        "description": "Deletes a person"
+      }
+    },
+    "/persons/logs": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              }
+            },
+            "description": "Server logs"
+          }
+        }
+      }
+    },
+    "/token": {
+      "get": {
+        "tags": [
+          "Token"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "bearer": {
+                "examples": {
+                  "token": {
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib2R5Ijoic3R1ZmYiLCJpYXQiOjE2NzM3MzUzMTR9.14xgyGF8D_0MJALNSUfKpm2sCZ_H8xJdyBpFsypbx6o"
+                  }
+                }
+              }
+            },
+            "description": "Server generates a token"
+          }
+        },
+        "summary": "Get a token"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Person": {
+        "title": "Root Type for Person",
+        "description": "",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "id": {
+            "format": "int32",
+            "description": "",
+            "type": "integer"
+          }
+        },
+        "example": {
+          "name": "John",
+          "email": "test@example.com",
+          "avatar": "shorturl.at/djpCU"
+        }
+      },
+      "Log": {
+        "title": "Root Type for Log",
+        "description": "",
+        "properties": {
+          "timestamp": {
+            "type": "string"
+          },
+          "originalUrl": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "clientId": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "timestamp": "2021-03-01T00:00:00.000Z",
+          "originalUrl": "/persons",
+          "method": "POT",
+          "clientId": "ZjipSdVMKXpiejirTBv9e1pic68lYIMmXJALVTf3OYc"
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "scheme": "bearer",
+        "type": "http",
+        "description": ""
+      }
+    }
+  }
+}
