@@ -5,6 +5,8 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import * as http from "http";
 import rateLimit from "express-rate-limit";
+import swaggerUI from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
 
 const app = express();
 const limiter = rateLimit({
