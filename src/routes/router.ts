@@ -18,6 +18,26 @@ router.get("/", getAllPerson);
 router.get("/:id", getPersonById);
 router.put("/:id", [verifyToken], updatePerson);
 router.delete("/:id", [verifyToken], deletePerson);
+router.get("/log", async (req: any, res: any) => {
+    const lines = [];
+    const lineReader = require('readline').createInterface({
+        input: require('fs').createReadStream('log.txt'),
+        crlfDelay: Infinity
+    });
+
+    for await (const line of lineReader) {
+        const fields = line.match(/(\\.|[^,])+/g);
+        lines.push({
+            timestamp: fields[0],
+            originalUrl: fields[1],
+            method: fields[2],
+            clientId: fields[3],
+            dataDiff: fields[4],
+            body: fields[5]
+        });
+    }
+    res.send(lines);
+});
 
 function verifyToken(req : any, res : any, next : any) {
     const authHeader = req.headers['authorization'];
