@@ -1,6 +1,7 @@
 import {RequestHandler} from "express";
 import {Persons} from "../interfaces/persons";
 
+const jwt = require('jsonwebtoken');
 export const createPerson: RequestHandler = async (req, res, next) => {
     const persons = await Persons.create({...req.body});
     return res
@@ -41,4 +42,15 @@ export const deletePerson: RequestHandler = async (req, res, next) => {
     await Persons.destroy({where: {id}});
 
     return res.status(200).json({message: "Person deleted successfully", data: deletedPerson});
+}
+
+async function authenticate(req: any, res: any, next: any) {
+    const {id} = req.params;
+    const uniqueToken = req.headers.authorization.split(' ')[1];
+
+    const personObj: any = await Persons.findByPk(id);
+
+    if (personObj.token !== uniqueToken) {
+        throw new Error("auth error");
+    }
 }
