@@ -133,7 +133,7 @@
         "description": "Deletes a person"
       }
     },
-    "/persons/logs": {
+    "/persons/log": {
       "get": {
         "tags": [
           "Logs"
