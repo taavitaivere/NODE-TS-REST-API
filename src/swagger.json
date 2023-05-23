@@ -3,7 +3,7 @@
   "info": {
     "title": "Swagger Persons",
     "version": "1.0.0",
-    "description": "This is a simple API to manage persons",
+    "description": "First generate token from token endpoint. Then use the token in the Authorize button to access the API.",
     "contact": {
       "email": "abc@gmail.com"
     },
