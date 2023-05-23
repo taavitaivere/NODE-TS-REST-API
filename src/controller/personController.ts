@@ -30,10 +30,18 @@ export const getAllPerson: RequestHandler = async (req, res, next) => {
 }
 
 export const getPersonById: RequestHandler = async (req, res, next) => {
-    const {id} = req.params;
-    const person: Persons | null = await Persons.findByPk(id);
+    try {
+        const {id} = req.params;
+        const person: Persons | null = await Persons.findByPk(id);
 
-    return res.status(200).json({message: "Person fetched successfully", data: person});
+        if (person) {
+            return res.status(200);
+        } else {
+            return res.status(404).json({message: "Person not found"});
+        }
+    } catch (err) {
+        return res.status(500).json({message: "Internal server error"});
+    }
 }
 
 export const updatePerson: RequestHandler = async (req, res, next) => {
