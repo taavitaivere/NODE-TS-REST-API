@@ -39,24 +39,35 @@ export const getPersonById: RequestHandler = async (req, res, next) => {
 export const updatePerson: RequestHandler = async (req, res, next) => {
     try {
         await authenticate(req, res, next);
-        const {id} = req.params;
+        const { id } = req.params;
         const person: Persons | null = await Persons.findByPk(id);
 
-        if (person) {
-            await Persons.update({...req.body}, {where: {id}});
-            const updatedPerson: Persons | null = await Persons.findByPk(id);
-
-            return res.status(200).json({message: "Person updated successfully", data: updatedPerson});
+        if (!req.body.name || !req.body.email || !req.body.avatar) {
+            return res.status(400).json({ message: "Bad request, missing required fields" });
         }
 
-    }
-    catch (err: any) {
+        if (!person) {
+            return res.status(404).json({ message: "Person not found" });
+        }
+
+        await Persons.update({...req.body}, {where: {id}});
+        const updatedPerson: Persons | null = req.body;
+
+
+        return res.status(200).json({
+            message: "Person updated successfully",
+            name: updatedPerson?.name,
+            email: updatedPerson?.email,
+            avatar: updatedPerson?.avatar
+        });
+
+    } catch (err) {
         if (err.message === "auth error") {
             return res.status(403).send();
         }
-        return res.status(404).json({message: "Person not found"});
+        return res.status(500).json({message: err.message});
     }
-}
+};
 
 export const deletePerson: RequestHandler = async (req, res, next) => {
     try {
