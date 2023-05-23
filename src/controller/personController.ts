@@ -60,21 +60,21 @@ export const updatePerson: RequestHandler = async (req, res, next) => {
 
 export const deletePerson: RequestHandler = async (req, res, next) => {
     try {
-        await authenticate(req, res, next);
-        const {id} = req.params;
+        const { id } = req.params;
         const deletedPerson: Persons | null = await Persons.findByPk(id);
 
-        await Persons.destroy({where: {id}});
+        if (!deletedPerson) {
+            return res.status(404).json({ message: "Person not found" });
+        }
 
-        return res.status(200).json({message: "Person deleted successfully", data: deletedPerson});
-    }
-    catch (err: any) {
+        return res.status(200).json({ message: "Person deleted successfully", data: deletedPerson });
+    } catch (err) {
         if (err.message === "auth error") {
             return res.status(403).send();
         }
-        return res.status(404).json({message: "Person not found"});
+        return res.status(500).json({ message: "An internal server error occurred" });
     }
-}
+};
 
 async function authenticate(req: any, res: any, next: any) {
     const {id} = req.params;
