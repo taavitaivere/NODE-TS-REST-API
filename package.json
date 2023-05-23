@@ -2,16 +2,16 @@
   "name": "nodets",
   "version": "1.0.0",
   "description": "node+ts+sql",
-  "main": "index.js",
+  "main": "app.ts",
   "scripts": {
-    "start": "tsc && nodemon --watch 'src/**/*.ts' --exec 'node dist/app.js'",
+    "start": "tsc && nodemon dist/app.js",
     "build": "tsc",
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "socket.io": "^4.5.4",
+    "circular-json": "^0.5.9",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -20,6 +20,7 @@
     "mysql2": "^2.3.3",
     "sequelize": "^6.28.1",
     "sequelize-typescript": "^2.1.5",
+    "socket.io": "^4.5.4",
     "swagger-ui-express": "^4.6.0",
     "tsoa": "^4.1.3"
   },
