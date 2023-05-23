@@ -86,6 +86,9 @@ export const deletePerson: RequestHandler = async (req, res, next) => {
             return res.status(404).json({ message: "Person not found" });
         }
 
+        // Delete the person from the database
+        await deletedPerson.destroy();
+
         return res.status(200).json({ message: "Person deleted successfully", data: deletedPerson });
     } catch (err) {
         if (err.message === "auth error") {
