@@ -3,15 +3,30 @@ import {Persons} from "../interfaces/persons";
 
 const jwt = require('jsonwebtoken');
 export const createPerson: RequestHandler = async (req, res, next) => {
-    const persons = await Persons.create({...req.body});
-    return res
-        .status(200)
-        .json({message: "Persons fetched successfully", data: persons});
+    try {
+        const { name, email, avatar } = req.body;
+        const token = req.headers.authorization.split(' ')[1]; // Extract the token from the Authorization header
+
+        if (!name || !email || !avatar || !token) {
+            return res.status(400).json({ message: "Name, email, avatar, and token are required fields" });
+        }
+
+        // Include the token in the request body
+        const persons = await Persons.create({ name, email, avatar, token });
+
+        return res.status(200).json({ message: "Persons created successfully", data: persons });
+    } catch (err) {
+        return res.status(500).json({ message: "Something went wrong" });
+    }
 };
+
 export const getAllPerson: RequestHandler = async (req, res, next) => {
     const allPersons: Persons[] = await Persons.findAll();
 
-    return res.status(200).json({message: "All persons fetched successfully", data: allPersons});
+    return res
+        .status(200)
+        .json(allPersons)
+
 }
 
 export const getPersonById: RequestHandler = async (req, res, next) => {
